@@ -68,31 +68,18 @@ public class SecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter(new CustomJwtGrantedAuthoritiesConverter(rolePermissionService));
         return converter;
     }
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(corsSecurityConfig.getAllowedOrigins()); // Ensure this method is returning a list of origins
-//        configuration.setAllowedHeaders(corsSecurityConfig.getAllowedHeader()); // Ensure this method is returning the correct headers
-//        configuration.setAllowedMethods(corsSecurityConfig.getAllowedMethod()); // Ensure this method is returning the correct methods
-//        configuration.setAllowCredentials(corsSecurityConfig.getAllowCredentials());
-//        configuration.setMaxAge(Long.parseLong(corsSecurityConfig.getMaxAge()));
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration); // Apply to all endpoints
-//        return source;
-//    }
-@Bean
-public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // Your frontend URL
-    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-    configuration.setAllowCredentials(true);
-    configuration.setMaxAge(3600L); // Optional, cache preflight response for 1 hour
+   @Bean
+   CorsConfigurationSource corsConfigurationSource() {
+       CorsConfiguration configuration = new CorsConfiguration();
+       configuration.setAllowedOrigins(corsSecurityConfig.getAllowedOrigins());
+       configuration.setAllowedHeaders(corsSecurityConfig.getAllowedHeader());
+       configuration.setAllowedMethods(corsSecurityConfig.getAllowedMethod());
+       configuration.setAllowCredentials(corsSecurityConfig.getAllowCredentials());
+       configuration.setMaxAge(Long.parseLong(corsSecurityConfig.getMaxAge()));
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration); // Apply to all endpoints
-    return source;
-}
+       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+       source.registerCorsConfiguration("/**", configuration);
+       return source;
+   }
 
 }
