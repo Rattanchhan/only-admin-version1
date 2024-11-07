@@ -23,7 +23,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
@@ -71,9 +71,9 @@ public class SecurityConfig {
    @Bean
    CorsConfigurationSource corsConfigurationSource() {
        CorsConfiguration configuration = new CorsConfiguration();
-       configuration.setAllowedOrigins(corsSecurityConfig.getAllowedOrigins());
-       configuration.setAllowedHeaders(corsSecurityConfig.getAllowedHeader());
-       configuration.setAllowedMethods(corsSecurityConfig.getAllowedMethod());
+       configuration.setAllowedOriginPatterns(List.of(corsSecurityConfig.getAllowedOrigins().split(",")));
+       configuration.setAllowedMethods(List.of(corsSecurityConfig.getAllowedMethod().split(",")));
+       configuration.setAllowedHeaders(List.of(corsSecurityConfig.getAllowedHeader().split(",")));
        configuration.setAllowCredentials(corsSecurityConfig.getAllowCredentials());
        configuration.setMaxAge(Long.parseLong(corsSecurityConfig.getMaxAge()));
 

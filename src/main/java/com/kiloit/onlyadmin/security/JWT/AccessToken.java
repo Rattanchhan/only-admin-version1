@@ -1,9 +1,7 @@
 package com.kiloit.onlyadmin.security.JWT;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
