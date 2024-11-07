@@ -47,7 +47,7 @@ public class FileMediaService extends BaseService {
         try {
             if (Files.notExists(Paths.get(serverPath))) Files.createDirectories(Paths.get(serverPath));
         }catch (Exception e){
-            throw new BadRequestException("File path not found");
+            throw new BadRequestException(MessageConstant.FILEMEDIA.FILE_PATH_HAS_NOT_FOUND);
         }
 
         try {

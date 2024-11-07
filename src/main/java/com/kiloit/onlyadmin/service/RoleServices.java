@@ -80,7 +80,7 @@ public class RoleServices extends BaseService {
         Set<Long> requestedPermissionIds = setPermissionRequest.getItems().stream().map(SetPermissionItemRequest::getId).collect(Collectors.toSet());
         Set<PermissionEntity> requestedPermissions = permissionRepository.findAllByIdIn(requestedPermissionIds);
 
-        if (requestedPermissions.isEmpty()) return response(HttpStatus.BAD_REQUEST, "Permission has not been found");
+        if (requestedPermissions.isEmpty()) return response(HttpStatus.BAD_REQUEST, MessageConstant.ROLE.PERMISSION_NOT_FOUND);
         Set<Long> removeIds = setPermissionRequest.getItems().stream().filter(item -> !item.getStatus()).map(SetPermissionItemRequest::getId).collect(Collectors.toSet());
         Set<PermissionEntity> toRemove = requestedPermissions.stream().filter(permission -> removeIds.contains(permission.getId())).collect(Collectors.toSet());
         

@@ -1,10 +1,9 @@
 package com.kiloit.onlyadmin.security.JWT;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,13 +22,11 @@ import com.nimbusds.jose.proc.SecurityContext;
 @Component
 @RequiredArgsConstructor
 public class RefreshToken {
-    private static final String PRIVATE_KEY_FILE = "refreshTokenPrivateKey.pem";
-    private static final String PUBLIC_KEY_FILE = "refreshTokenPublicKey.pem";
     private final TokenConfig tokenConfig;
 
     @Bean(("refreshTokenKeyPair"))
-    public KeyPair accessTokenKeyPairConfig() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-       return tokenConfig.getKeyPair(PRIVATE_KEY_FILE, PUBLIC_KEY_FILE);
+    public KeyPair accessTokenKeyPairConfig() throws GeneralSecurityException, IOException {
+       return tokenConfig.getKeyPair();
     }
 
     @Bean("refreshTokenRSAKey")

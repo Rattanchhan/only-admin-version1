@@ -1,6 +1,7 @@
 package com.kiloit.onlyadmin.security.JWT;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
@@ -23,13 +24,11 @@ import com.nimbusds.jose.proc.SecurityContext;
 @Component
 @RequiredArgsConstructor
 public class AccessToken {
-    private static final String PRIVATE_KEY_FILE = "accessTokenPrivateKey.pem";
-    private static final String PUBLIC_KEY_FILE = "accessTokenPublicKey.pem";
     private final TokenConfig tokenConfig;
 
     @Bean(("accessTokenKeyPair"))
-    public KeyPair accessTokenKeyPair() throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-       return tokenConfig.getKeyPair(PRIVATE_KEY_FILE, PUBLIC_KEY_FILE);
+    public KeyPair accessTokenKeyPair() throws GeneralSecurityException, IOException {
+       return tokenConfig.getKeyPair();
     }
     @Bean("accessTokenRSAKey")
     RSAKey accessTokenRSAKey(@Qualifier("accessTokenKeyPair")KeyPair keyPair){
