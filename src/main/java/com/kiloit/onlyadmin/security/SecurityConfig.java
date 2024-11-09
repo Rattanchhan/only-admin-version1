@@ -1,7 +1,6 @@
 package com.kiloit.onlyadmin.security;
 import com.kiloit.onlyadmin.WebMvcConfigurer.CorsSecurityConfig;
 import com.kiloit.onlyadmin.exception.CustomAuthenticationEntryPoint;
-import com.kiloit.onlyadmin.security.JWT.RolePermissionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,8 +21,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
@@ -33,7 +29,6 @@ public class SecurityConfig {
     private static final String[] PUBLIC_ROUTE = {"/api/v1/auth/**"};
     private final UserDetailsService userDetailsService;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-    private final RolePermissionService rolePermissionService;
     private final CorsSecurityConfig corsSecurityConfig;
 
     @Bean
@@ -57,17 +52,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults());
         httpSecurity.authorizeHttpRequests(authorize -> authorize.requestMatchers(PUBLIC_ROUTE).permitAll().anyRequest().authenticated());
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder))
-//                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(customAuthenticationEntryPoint));
         httpSecurity.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return httpSecurity.build();
     }
 
-    private JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(new CustomJwtGrantedAuthoritiesConverter(rolePermissionService));
-        return converter;
-    }
    @Bean
    CorsConfigurationSource corsConfigurationSource() {
        CorsConfiguration configuration = new CorsConfiguration();
