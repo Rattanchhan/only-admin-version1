@@ -1,4 +1,6 @@
 package com.kiloit.onlyadmin.model.user.mapper;
+import com.kiloit.onlyadmin.model.user.respone.auth.CustomUserDetailResponse;
+import com.kiloit.onlyadmin.security.CustomUserDetail;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -67,5 +69,7 @@ public interface UserMapper {
     UserEntity fromRegisterRequest(RegisterRequest registerRequest);
 
     PermissionRS from(PermissionEntity permissionEntity);
+
+    CustomUserDetailResponse from(CustomUserDetail customUserDetail);
 
 }

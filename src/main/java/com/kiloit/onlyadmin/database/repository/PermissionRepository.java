@@ -1,4 +1,5 @@
 package com.kiloit.onlyadmin.database.repository;
+import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,12 @@ public interface PermissionRepository extends JpaRepository<PermissionEntity,Lon
             )
     """)
     Page<PermissionStatusResponse> findAllPermission(@Param("roleId") Long roleId,@Param("module") String module, Pageable pageable);
-    
+
+    @Query("""
+            SELECT p.name FROM PermissionEntity AS p
+            JOIN p.roles AS r
+            WHERE r.id = :roleId
+    """)
+    Set<String> findAllByRoleId(@Param("roleId") Long roleId);
     
 }

@@ -1,6 +1,5 @@
 package com.kiloit.onlyadmin.security.JWT;
 
-import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
@@ -22,12 +21,6 @@ import com.nimbusds.jose.proc.SecurityContext;
 @Component
 @RequiredArgsConstructor
 public class RefreshToken {
-    private final TokenConfig tokenConfig;
-
-    @Bean(("refreshTokenKeyPair"))
-    public KeyPair accessTokenKeyPairConfig() throws GeneralSecurityException, IOException {
-       return tokenConfig.getKeyPair();
-    }
 
     @Bean("refreshTokenRSAKey")
     RSAKey refreshTokenRSAKey(@Qualifier("refreshTokenKeyPair")KeyPair keyPair){

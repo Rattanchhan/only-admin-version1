@@ -56,8 +56,8 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults());
         httpSecurity.authorizeHttpRequests(authorize -> authorize.requestMatchers(PUBLIC_ROUTE).permitAll().anyRequest().authenticated());
-        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder)
-                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+        httpSecurity.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder))
+//                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                 .authenticationEntryPoint(customAuthenticationEntryPoint));
         httpSecurity.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return httpSecurity.build();

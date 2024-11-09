@@ -1,6 +1,7 @@
 package com.kiloit.onlyadmin.security.JWT;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKeyFactory;
@@ -19,13 +20,30 @@ import java.security.spec.X509EncodedKeySpec;
 
 @Component
 public class TokenConfig {
-    @Value("${spring.security.token-password}")
-    private String password;
+    @Value("${spring.security.access-password}")
+    private String password1;
 
-    @Value("${spring.security.token-salt}")
-    private String salt;
+    @Value("${spring.security.access-salt}")
+    private String salt1;
 
-    public KeyPair getKeyPair() throws GeneralSecurityException {
+    @Value("${spring.security.refresh-password}")
+    private String password2;
+
+    @Value("${spring.security.refresh-salt}")
+    private String salt2;
+
+    @Bean("accessTokenKeyPair")
+    public KeyPair getAccessTokenKeyPair() throws GeneralSecurityException {
+        return generateKeyPair(password1, salt1);
+    }
+
+
+    @Bean("refreshTokenKeyPair")
+    public KeyPair getRefreshTokenKeyPair() throws GeneralSecurityException {
+        return generateKeyPair(password2, salt2);
+    }
+
+    public KeyPair generateKeyPair(String password,String salt) throws GeneralSecurityException {
 
         byte[] seed = deriveSeedFromPasswordAndSalt(password, salt);
         SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
@@ -35,8 +53,8 @@ public class TokenConfig {
         return keyPairGenerator.generateKeyPair();
     }
 
-    private byte[] deriveSeedFromPasswordAndSalt(String password, String salt) throws GeneralSecurityException {
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 65536, 256);
+    private byte[] deriveSeedFromPasswordAndSalt(String password, String accessSalt) throws GeneralSecurityException {
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), accessSalt.getBytes(), 65536, 256);
         SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
         return factory.generateSecret(spec).getEncoded();
     }

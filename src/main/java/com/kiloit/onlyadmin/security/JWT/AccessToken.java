@@ -3,9 +3,7 @@ package com.kiloit.onlyadmin.security.JWT;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
-import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,12 +22,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 @Component
 @RequiredArgsConstructor
 public class AccessToken {
-    private final TokenConfig tokenConfig;
 
-    @Bean(("accessTokenKeyPair"))
-    public KeyPair accessTokenKeyPair() throws GeneralSecurityException, IOException {
-       return tokenConfig.getKeyPair();
-    }
     @Bean("accessTokenRSAKey")
     RSAKey accessTokenRSAKey(@Qualifier("accessTokenKeyPair")KeyPair keyPair){
         return new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())

@@ -1,5 +1,6 @@
 package com.kiloit.onlyadmin.security;
 import java.util.Optional;
+import com.kiloit.onlyadmin.database.repository.PermissionRepository;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,16 +17,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserDetailServiceImplementation implements UserDetailsService {
     private final UserRepository userRepository;
-
+    private final PermissionRepository permissionRepository;
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         String type="";
-        Optional<UserEntity> user = userRepository.findUserOrEmail(userName);
-        try {if(user.isEmpty()) throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);} catch (BadRequestException e) {e.printStackTrace();}
-        if(userName.contains("@gmail.com")) type="email";
-        CustomUserDetail customUserDetail = new CustomUserDetail(type);
-        customUserDetail.setUser(user.get());
-        return customUserDetail;
+        try {
+            Optional<UserEntity> user = userRepository.findUserOrEmail(userName);
+            if(user.isEmpty()) throw new BadRequestException(MessageConstant.USER.USER_NOT_FOUND);
+            else{
+                if(userName.contains("@gmail.com")) type="email";
+                CustomUserDetail.type = type;
+                return  CustomUserDetail.build(user.get(),permissionRepository);
+            }
+        } catch (BadRequestException e) {
+            throw new UsernameNotFoundException(e.getMessage());
+        }
     }
     
 }
