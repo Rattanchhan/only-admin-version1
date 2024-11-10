@@ -1,9 +1,11 @@
 package com.kiloit.onlyadmin.security;
 import com.kiloit.onlyadmin.WebMvcConfigurer.CorsSecurityConfig;
+import com.kiloit.onlyadmin.database.entity.UserEntity;
 import com.kiloit.onlyadmin.exception.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -42,6 +44,12 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
        return new BCryptPasswordEncoder();
     }
+
+    @Bean("auditorProvider")
+    public AuditorAware<UserEntity> auditorProvider() {
+        return new SpringSecurityAuditorAware();
+    }
+
     @Bean
     public JwtAuthenticationProvider configAuthenticationProvider(@Qualifier("refreshTokenJwtDecoder")JwtDecoder refreshTokenJwtDecoder){
         return new JwtAuthenticationProvider(refreshTokenJwtDecoder);
